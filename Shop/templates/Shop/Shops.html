@@ -1,0 +1,62 @@
+{% extends "main_templates.html" %}
+{% load static %}
+{% block Category %}
+<style type="text/css">
+    .list-group-item {
+        display: inline-block;
+
+        text-align: center;
+        list-style: none;
+        width: 30%; 
+
+        border: none;
+    }
+    .list-group-item a {
+        text-decoration: none;
+        color: black;
+    }
+    .price_cont {
+        display: flex;
+        flex-direction: row;
+    }
+    .price_cont a {
+        margin-left: 20%;
+    }
+</style>
+<div class="container">
+    <ul class="list-group-horizontal">
+        <h1>
+            {% if category %}
+            {{ category.category_name }}
+            {% else %}
+            Products
+            {% endif %}
+        </h1>
+        {% for product in products %}
+        <li class="list-group-item">
+            <a href="{{ product.get_absolute_url }}">
+                <img src="{% if product.product_img %}{{ product.product_img.url }}{% else %}{% static "img/no_image.png" %}{% endif %}" width="250px" height="200px">
+                <p>
+                    {{ product.product_name }}
+                </p>
+                <div class="price_cont">
+                    <h4>
+                        ${{ product.product_price }}
+                    </h4>
+                </a>
+                <form action="{% url "cart:cart_add" product.id %}" method="post">
+                    {{ cart_product_form }}
+                    {% csrf_token %}    
+                    <button type="submit" class="btn btn_cart" title="Add to cart">
+                        <span>
+                            Add to cart
+                        </span>
+                    </button>
+                </form>
+            </div>
+        </li>
+        {% endfor %}   
+
+    </ul>
+</div>   
+{% endblock %}
